@@ -4,8 +4,6 @@ The VW RNS-510 navigation head unit (Continental / ex-Siemens VDO, Wetzlar).
 Started 2026-11-04. The firmware is downloading on the PC (`a PC`,
 `~/Downloads`).
 
-Not the same unit as the AC8227L Android unit in the Passat CC (see `../head-unit/`).
-
 ## The unit (confirmed from the rear label)
 
 | Field | Value |
