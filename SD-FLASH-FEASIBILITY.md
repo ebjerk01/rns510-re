@@ -10,7 +10,7 @@ This is an undocumented but real capability, not a hack we have to invent.
 ## Evidence (from the decompressed SWL loader)
 
 `SWL.FLI` is a zlib stream at offset 0x21 → 11.28 MB of VxWorks/PPC code
-(the decompressed loader). It contains:
+((extracted for analysis)). It contains:
 
 - **A full SD-card driver**: `DRV_SDCARD_*` (blockRead/Write, mRead/mWrite, LL/ML layers), `sdManagerTask` with `MSDMANAGER_MOUNT_VOLUME`.
 - **DOS/FAT filesystem** (`dosFsLib.c`) and **cdromFs** — it can mount a FAT SD card and an ISO9660 CD.
@@ -73,7 +73,7 @@ found`) tell you exactly what it's doing and where it looks.
   stage's source scanning isn't in this image.
 - Source precedence when CD and SD both hold a tree.
 - Whether a DlScript-level command can call `dlsrcSetSWLPath` to redirect to SD
-  (needs RE of the DlScript command table in the decompressed loader).
+  (needs RE of the DlScript command table in `SWL_decompressed.bin`).
 - Integrity: each tree has its own `CRC.16` (CRC16 only — no signature, see
   FINDINGS §flaws), so a custom SD tree is accepted as long as its CRC matches.
   We can compute it.
@@ -87,8 +87,7 @@ console before the next.
 
 ## Donor radio as test mule (2026-11-04)
 
-The owner has a donor RNS-510: shuts off after a few minutes on the bench and
-boot-loops ~every 3 s; suspects missing CAN-gateway contact. Ideal mule — if the
+A second unit was available for testing. Ideal mule — if the
 SD-flash experiment bricks it, no loss.
 
 **Likely cause of the donor reset (from loader strings), most probable first:**
@@ -136,7 +135,7 @@ and/or find the hot component (thermal/finger test in the first minutes).
 ## CONFIRMED by MapsTool itself (2026-11-04) — the working example
 
 MapsTool-3.0.7 (Java, com.luxstudio90) embeds a complete SD2HDD boot package,
-(extracted for analysis). It proves
+saved to (extracted for analysis)/` + `mapstool_VIM_EU.WSH`. It proves
 the CD-small + SD-large split end to end:
 - Boot CD (small, all the laser reads): BLSCRIPT.CFG, SWL/.../SWL.FLI (3.7MB),
   WA/*.WSH, WA/CTEST.OUT, HDD/.../CONFIG/DLSCRIPT.TXT, VERSION.TXT, CRC.16.

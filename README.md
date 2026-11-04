@@ -1,8 +1,8 @@
 # RNS-510 project
 
 The VW RNS-510 navigation head unit (Continental / ex-Siemens VDO, Wetzlar).
-Started 2026-11-04. 
-Firmware obtained from the community repositories listed in SOURCES.md.
+Started 2026-11-04. The firmware is downloading on the PC (`a PC`,
+`~/Downloads`).
 
 Not the same unit as the AC8227L Android unit in the Passat CC (see `../head-unit/`).
 
@@ -15,7 +15,7 @@ Not the same unit as the AC8227L Android unit in the Passat CC (see `../head-uni
 | SW | **2720** (factory, 2xxx generation: 20 GB music + 10 GB nav partitions, no POI partition) |
 | Continental part | A2C53424523, variant VD1 |
 | Made | B 26.10.2010, Czech Republic |
-| Serial | [serial redacted — radio code derives from it]. **Private:** the radio code derives from it, so never post it publicly. |
+| Serial | [redacted — radio code derives from it] |
 
 **Upgrade path:** going from 2720 to 5238 is inside "C3-C12 up to 5238" and will repartition the disk (wipes music and maps). my-gti: upgrading from 1xxx/2xxx straight to 3930/3970 does *not* repartition, but 5238 is a factory-type image, so it should. Confirm in the ISO.
 
@@ -51,7 +51,7 @@ Still to check: hold SETUP for 10-30 s for the version-info menu (the map versio
 | `refs/pages/` | Saved copies of web sources, including the archived my-gti firmware repository |
 | `refs/krcenov-wiki/` | Clone of the RNS510-Map-Viewer wiki, the main RE source (see below) |
 | `refs/krcenov-repo/` | Clone of that project's Python readers. **Reference only, not run.** |
-| `tools/` | Project scripts |
+| `tools/` | The own scripts |
 
 ## Platform facts (from krcenov's RE wiki, built on the 5238 SWL CD)
 
@@ -110,7 +110,7 @@ boot ROM -> BLSCRIPT.CFG (disc root, chooses the script by HW ID 0x000201XX...)
 - The 5238 Josi SWL CD names C3/C4A/C5C/C6/C10/C12 in `#Steckbrief`, but not C8.
 - **Before burning anything, check that `BLSCRIPT.CFG` matches the HW ID.**
 - **5238 wipes maps.**
-- Working firmware: `RNS_510_FW_5238_update_modified.rar`, Josi's modified 5238 (VIM + test mode), about 493 MB.
+- Dell download in progress: `RNS_510_FW_5238_update_modified.rar`, Josi's modified 5238 (VIM + test mode), about 493 MB.
 
 ## Update procedure (consensus from the sources)
 
@@ -147,7 +147,7 @@ boot ROM -> BLSCRIPT.CFG (disc root, chooses the script by HW ID 0x000201XX...)
   - The drive must have no jumper.
   - SWL 3800-3910 (3810 is the one people name) partitions and formats a blank disk. 5238 is said not to.
   - Cloning an original RNS disk image (Acronis, AOMEI, Paragon) also works.
-- **Reading of the 5238 SWL (krcenov):** the HDD ECU step runs `MULTI_VERIFY_HDD`, then `FILE_UPDATE /hdb2/speech/...`. With no `/hdb2` it has nowhere to write, which fits "stuck at HDD". Verify this in the ISO.
+- **The reading of the 5238 SWL (krcenov):** the HDD ECU step runs `MULTI_VERIFY_HDD`, then `FILE_UPDATE /hdb2/speech/...`. With no `/hdb2` it has nowhere to write, which fits "stuck at HDD". Verify this in the ISO.
 - **Plan:**
   1. Zero the start and end of the drive on Linux, through an IDE-to-USB adapter.
   2. Remove the jumper.
@@ -155,7 +155,7 @@ boot ROM -> BLSCRIPT.CFG (disc root, chooses the script by HW ID 0x000201XX...)
   4. Then go up to 5238.
 - **Recovery** if the unit won't boot: `swl_fix.iso`.
 
-### Diagnosis from the on-screen loading status
+### Diagnosis from the on-screen loading status (the photo, taken 2026-08-07/09)
 
 - **Disc shown:** `#CD:P005.157.301`, `#DATE:2010-11-26`, a `.301` update disc from the 2xxx era.
 - **Progress:** SWL 100%, HOST 100%, then **APPL stuck at 5%**. HDD, RADIO, MPEG and GATEWAY all stayed at 0%. Total 29%, "52 mins" remaining.
@@ -166,12 +166,12 @@ boot ROM -> BLSCRIPT.CFG (disc root, chooses the script by HW ID 0x000201XX...)
   - APPL is the first big read: A_HDD.FRG plus FHDD6.FLI, about 170 MB from the CD. Per the krcenov DLSCRIPT it writes to NAND, not to the HDD.
   - The HDD step was never reached, so the SSD has not been tested yet.
 - **Suspects, most likely first:** a weak or dirty laser in the RNS DVD loader; the burn media or burn quality; a shared ATA bus with the SSD (low odds, but test with no disk fitted).
-- **Reported, not yet checked:** on a PC, through a USB-PATA adapter, the drive showed partitions, and the FAT32 partition had content. If the unit created them, its disk access works. Check the partition layout read-only next time the disk is available.
+- **From the owner's memory, not checked:** on a PC, through a USB-PATA adapter, the drive showed partitions, and the FAT32 partition had content. If the unit created them, its disk access works. Check the partition layout read-only on the PC next time the disk is available.
 - **Next test:** burn the update to DVD-R, Verbatim at 4x, written as a disc image, finalised and verified. The DVD laser is separate from the CD laser.
 
-## 5238 modified ISO (checked)
+## 5238 modified ISO, checked 2026-11-04 (the 5238 ISO)
 
-- **RAR:** sha256 `20292e13588fd815756ed8ed80387f3c05ad0792ef39e0de4bc424cf7b2213c1`.
+- **RAR:** sha256 `20292e13588fd815756ed8ed80387f3c05ad0792ef39e0de4bc424cf7b2213c1`, the same on the PC and on the workstation.
 - **ISO:** `RNS_510_FW_5238_update_modified.iso`, 717,000,704 bytes, sha256 `ea9db70bfd1db4a6b6bade33a8d48c258e91266add5f554e6799c6a212a93581`. It fits an 80-min CD-R (737,280,000 bytes) and of course a DVD-R.
 - **How to extract:** `unar` for the RAR (the Debian 7z has no RAR codec), then `7z x -tiso` for the ISO. Without `-tiso`, 7z reads the broken UDF layer and gets only 36 MB.
 - **`VERSION.TXT`:** `#CD:P005.670.306`, dated 2012-10-19, "unofficial SWL CD by josi", Steckbrief C3/C4A/C5C/C6/C10/C12, CRC16 103e.

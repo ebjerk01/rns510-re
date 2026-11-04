@@ -9,7 +9,7 @@ Goal: flaws, performance, mods. This builds on the krcenov RE wiki (`../refs/krc
 - MPC5200 (PPC603e, ~400 MHz), VxWorks 5.5, gcc-2.96. See `../README.md`.
 - `FHDD6.FLI` = 3 regions: **0–24 MB** native PPC (navicore), **24–76 MB** Java classes, **76–85.6 MB** VxWorks kernel/BSP.
 - Verified load base (krcenov): `VA = file_offset + 0xf688dcf4`, holds only for the ~1.2–9 MB code-dense sub-range.
-- A Ghidra project of the 1.2–9 MB region imported raw PPC BE at base `0xf69b2c74`.
+- The Ghidra project: a Ghidra project — the 1.2–9 MB region imported raw PPC BE at base `0xf69b2c74`.
 
 ---
 
@@ -52,7 +52,7 @@ Everything that drives a flash is plaintext and only CRC16-protected (see flaws)
 `vdo.nav.api.edb.*` is a JDBC-like client to an embedded SQLite engine. Custom POI `.db3` files under `EDB/POI/` are a supported extension (name/lat/lon only; no road geometry). Not UI modding, but a real data mod.
 
 ### 5. UI state machine — found, partially open (native lead)
-Embedded in the native region at file offset **0x1041fe–0x125ee4** (~138 KB) is a statechart model (EMF/GMF style: `<Transition>`, `idref`, `source`/`target`).
+Embedded in the native region at file offset **0x1041fe–0x125ee4** (~138 KB) is a statechart model (EMF/GMF style: `<Transition>`, `idref`, `source`/`target`). Saved to (extracted for analysis).
 - Guard nodes: `allow_context_media`, `allow_context_setup`, `allow_context_testmode`, `allow_context_tone`.
 - Action transitions: `jlaxPerformAction`, `jlaxPerformExtendedAction` with `fp0..fp4` params.
 - This is the most promising lead for unlocking hidden menus/contexts **without** touching the romized Java — the guards appear to be data in this model, not compiled bytecode. Needs the native code that interprets `allow_context_*` (Ghidra pass) to confirm whether flipping a guard is enough.
@@ -84,7 +84,7 @@ On a 2010 MPC5200 you cannot meaningfully speed up the nav engine by patching na
 
 ## Native pass (Ghidra) — in progress
 
-Ghidra, 1.2–9 MB region, base `0xf69b2c74`. Targets to pull:
+a Ghidra project, 1.2–9 MB region, base `0xf69b2c74`. Once analysis is saved, pull:
 - the function that reads `allow_context_*` (does flipping a guard unlock a context?),
 - the CRC16 / SWL-media validation path (confirms #1),
 - startup/bootMgr sequencing (any low-risk perf or logging wins).
@@ -94,7 +94,7 @@ Ghidra, 1.2–9 MB region, base `0xf69b2c74`. Targets to pull:
 ## Addendum (parallel analysis while native pass ran)
 
 ### Full UI screen list — 86 screens
-Enumerated from the Java region (`Menu_*Rules`/`MenuNet_*Rules`), matches the wiki's count exactly. Hidden/engineering screens present and real: `MenuNet_TESTMODE`, `MenuNet_TESTMODE_SYSTEM`, `MenuNet_SERVICE`, `MenuNet_CODE_CHECK`, `Menu_TESTMODE_DAB_MONITOR_MAIN`, `Menu_SYS_CODE_INPUT`, `Menu_SYS_CODE_SYSTEM_SAFE`. These tie to coding `0x21=Testmode Active` — the screens exist in this build, coding gates reachability.
+Enumerated from the Java region (`Menu_*Rules`/`MenuNet_*Rules`), matches the wiki's count exactly. Saved to (extracted for analysis). Hidden/engineering screens present and real: `MenuNet_TESTMODE`, `MenuNet_TESTMODE_SYSTEM`, `MenuNet_SERVICE`, `MenuNet_CODE_CHECK`, `Menu_TESTMODE_DAB_MONITOR_MAIN`, `Menu_SYS_CODE_INPUT`, `Menu_SYS_CODE_SYSTEM_SAFE`. These tie to coding `0x21=Testmode Active` — the screens exist in this build, coding gates reachability.
 
 ### Correction: the 0x1041fe statechart is the BOOT MANAGER, not the UI menu guards
 It is the bmgr (boot-manager) lifecycle model: SDC (shutdown-consumer) run-up/run-down/shutdown ordering — `bmgrSetState`, `bmgrPerformSdcRu/Rd/Sd`, `bmgrTimer`, `informNaviCoreAboutRundownAndGiveChanceToSaveParameters`. The `allow_context_{media,setup,testmode,tone}` nodes gate contexts *during the lifecycle*, not menu entry. This is the **startup/shutdown sequencer**.
