@@ -155,7 +155,7 @@ boot ROM -> BLSCRIPT.CFG (disc root, chooses the script by HW ID 0x000201XX...)
   4. Then go up to 5238.
 - **Recovery** if the unit won't boot: `swl_fix.iso`.
 
-### Diagnosis from the on-screen loading status (the photo, taken 2026-08-07/09)
+### Diagnosis from the on-screen loading status
 
 - **Disc shown:** `#CD:P005.157.301`, `#DATE:2010-11-26`, a `.301` update disc from the 2xxx era.
 - **Progress:** SWL 100%, HOST 100%, then **APPL stuck at 5%**. HDD, RADIO, MPEG and GATEWAY all stayed at 0%. Total 29%, "52 mins" remaining.
