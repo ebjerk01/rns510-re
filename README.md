@@ -150,7 +150,7 @@ boot ROM -> BLSCRIPT.CFG (disc root, chooses the script by HW ID 0x000201XX...)
 - **Known from forums:**
   - The unit only accepts a disk that is either truly blank (no MBR at all) or carries the RNS partition layout. A PC-made MBR or NTFS/FAT layout is rejected.
   - The drive must have no jumper.
-  - SWL 3800-3910 (3810 is the one people name) partitions and formats a blank disk. 5238 is said not to.
+  - Every SWL loader can partition/format a blank disk itself (`MULTI_VERIFY_HDD` / `hdTermFormat`); see FINDINGS.md, "HDD partitioning & format". The old advice to "run SWL 3810" is a fallback, not a requirement.
   - Cloning an original RNS disk image (Acronis, AOMEI, Paragon) also works.
 - **The reading of the 5238 SWL (krcenov):** the HDD ECU step runs `MULTI_VERIFY_HDD`, then `FILE_UPDATE /hdb2/speech/...`. With no `/hdb2` it has nowhere to write, which fits "stuck at HDD". Verify this in the ISO.
 - **Plan:**

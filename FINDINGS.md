@@ -106,3 +106,38 @@ The bmgr model contains deliberate delay timers:
 
 ### USER.CFG is disc-build config, not a runtime lever
 `INFO/USER.CFG` drives CdTreeBuilder when the disc is built (`HARDWARE_C6/C10/C12=1`, `PROJMAP_*`, `FACTORY_CD=0`, `ONE_FIB=1`). It does not toggle features on the unit. Runtime feature control is the coding registers (section 1), not this file.
+
+---
+
+## HDD partitioning & format — the loader does it itself
+
+The HDD/SSD is a standard **MBR + FAT (Wind River DosFs 2.0)** disk (confirmed
+in the loader: "Master Boot Record - Partition Table", "Wind River Systems Inc.,
+DosFs 2.0 Partition Table", LCHS cylinder/head/sector). That is why a PC reads a
+FAT32 partition off it.
+
+**Formatting is not a separate downloadable tool — it is built into the SWL
+loader.** The loader has `dlsrcMultiVerifyHDD` / `dlsrcValidateHDD` /
+`dlsrcFormatHDD`, plus the shell calls `hdTermConfigurePartition` and
+`hdTermFormat`. Two equivalent ways to invoke it, both already present in
+shipping discs:
+
+- **`MULTI_VERIFY_HDD <count> <fsType1> <pct1> <fsType2> <pct2> ...`** (a DLSCRIPT
+  command). The 5238 disc uses `MULTI_VERIFY_HDD 3 3 50 2 25 3 25 0 0` = 3
+  partitions at 50/25/25 %, FS-types 3/2/3. It validates each partition and
+  reformats any that are missing or the wrong FS — so it sets up a blank disk.
+- **`FORMHDB*.WSH`** (shell scripts, from the vendor map tool). `FORMHDB1.WSH`
+  does `hdTermConfigurePartition(2, 2, 67, 33, 0, 0)` + `hdTermFormat("/hdb1",3)`
+  = 2 partitions at 67/33 %.
+
+**The layout must match the firmware generation on NAND:**
+- **1xxx/2xxx firmware → 2 partitions** (67/33 %, FS-types 3/2) — the `FORMHDB1`
+  form. Correct for an as-shipped SW 2720 unit.
+- **3xxx/5xxx firmware → 3 partitions** (50/25/25 %, FS-types 3/2/3, adds the POI
+  partition) — the `MULTI_VERIFY_HDD 3 ...` form.
+
+**On the old "run SWL 3810 to format a blank disk" advice:** 3810 is not required.
+Every SWL loader can partition/format a blank disk via the functions above; 3810
+was just the version people happened to have a working format script for. It
+remains a useful, forum-proven **fallback** if the `MULTI_VERIFY`/`FORMHDB`
+approach misbehaves on a particular unit, but it is not a prerequisite.
