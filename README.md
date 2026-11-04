@@ -41,15 +41,22 @@ Started 2026-11-04. The firmware is downloading on the PC (`a PC`,
 
 Still to check: hold SETUP for 10-30 s for the version-info menu (the map version is not on the label). On 2720 the menu may not exist; it arrived with 3xxx.
 
-## Layout
+## This repository
+
+Documentation and analysis only. Firmware binaries, the vendor map tool, and the
+cloned reference material are **not** included (copyright + size).
 
 | Path | What |
 |---|---|
-| `firmware/` | Downloaded ISOs/archives. **Untrusted data:** extract here with 7z and never run anything from it. |
-| `refs/pages/` | Saved copies of web sources, including the archived my-gti firmware repository |
-| `refs/krcenov-wiki/` | Clone of the RNS510-Map-Viewer wiki, the main RE source (see below) |
-| `refs/krcenov-repo/` | Clone of that project's Python readers. **Reference only, not run.** |
-| `tools/` | The own scripts |
+| `README.md` | This overview: platform facts, compatibility, update procedure |
+| `FINDINGS.md` | Mod surface, security flaws, performance, the UI screen map |
+| `SD-FLASH-FEASIBILITY.md` | Flashing from SD card — mechanism and feasibility |
+| `SOURCES.md` | Credits and prior work |
+| `artifacts/ui_screens_86.txt` | The 86 UI screen/menu class names |
+| `tools/ghidra_export.py` | Ghidra post-script used in the native analysis |
+
+The primary external RE source is the krcenov RNS510-Map-Viewer wiki:
+<https://github.com/krcenov/RNS510-Map-Viewer>
 
 ## Platform facts (from krcenov's RE wiki, built on the 5238 SWL CD)
 
@@ -69,7 +76,7 @@ Still to check: hold SETUP for 10-30 s for the version-info menu (the map versio
 - **Possible safety MCU:** TMS470MF04207 (Cortex-M3). Not confirmed.
 - **Video in:** AD9883 / ADV7400 over I2C. Sources are DVD, TV and RVC.
 - **Serial debug console:** VxWorks `tShell`, 115200 baud, on a 26-pin connector (N91-10930), with pin 14 = GND.
-  - See `refs/krcenov-wiki/Theft-Protection-and-the-CAN-Gateway.md` and `images/`.
+  - See the krcenov wiki: <https://github.com/krcenov/RNS510-Map-Viewer/wiki/Theft-Protection-and-the-CAN-Gateway>.
   - The RX/TX pin numbers come from a diagram, so verify them on the hardware.
 - **Bluetooth:** Parrot module.
 
@@ -99,7 +106,7 @@ boot ROM -> BLSCRIPT.CFG (disc root, chooses the script by HW ID 0x000201XX...)
 | C6-C12 | 5274 (5269 is often called more stable) |
 | C14 | 6276 |
 
-**Definitive HW↔firmware map (my-gti 3983, saved refs/pages/hw-sw-versions-table.txt):**
+**Definitive HW↔firmware map (my-gti 3983):**
 - **The unit 1T0035680C (C8/C9, HW Vehicle 0xC801, HW Radio 0006): max MODIFIED firmware = 5269.** Unmodified max 2840; from-factory 2660.
 - 5270 = C10/C11/C12 (0xCA01/0xCC01, 680D/F/G/H/J/L/P/Q). 6270 = C14. **Do NOT flash 5270+/6270 on the 680C.**
 - 5238 (what we have) is compatible but not the newest; **5269 modified is the target firmware for the final flash.**
@@ -112,7 +119,7 @@ boot ROM -> BLSCRIPT.CFG (disc root, chooses the script by HW ID 0x000201XX...)
 
 ## Update procedure (consensus from the sources)
 
-1. Put the battery on a charger or power supply. The update takes about 60 minutes and the unit draws about 40 A with the ignition on.
+1. Keep the battery on a charger or a stable supply for the whole update (about an hour). The unit draws heavy current in peaks, so a weak supply can sag and interrupt the flash — which risks bricking it.
 2. Burn a CD-R at the lowest speed.
 3. Engine off. Enter update mode, insert the disc and confirm.
 4. Set 24-hour clock mode. "Clamp state" errors mean the unit did not reboot into update mode correctly.
@@ -122,8 +129,8 @@ boot ROM -> BLSCRIPT.CFG (disc root, chooses the script by HW ID 0x000201XX...)
 
 - https://altechnative.net/vw-rns-510-firmware-maps-update/
 - https://paulroberts69.wordpress.com/2015/10/01/upgrading-firmware-and-maps-on-vw-rns-510-satnav/ (HW table in the post)
-- https://web.archive.org/web/20200209030702/http://www.my-gti.com/3868/volkswagen-rns-510-firmware-download-repository (copied to `refs/pages/`)
-- my-gti 3374 (version numbering, partition sizes) and 3869 (5238 VERSION.TXT), copied to `refs/pages/`
+- https://web.archive.org/web/20200209030702/http://www.my-gti.com/3868/volkswagen-rns-510-firmware-download-repository
+- my-gti 3374 (version numbering, partition sizes) and 3869 (5238 VERSION.TXT)
 - https://github.com/krcenov/RNS510-Map-Viewer and its wiki: firmware RE, boot chain, coding, serial console, map formats
 - https://remkoweijnen.nl/blog/2011/09/27/rns-510-startup-logomy-thoughts/ (logo.fli format, VERSION.TXT CRC16)
 - https://github.com/bousqi/SMEG_PLUS (a related MPC5200/VxWorks/TFFS head unit, for comparison)
@@ -131,7 +138,7 @@ boot ROM -> BLSCRIPT.CFG (disc root, chooses the script by HW ID 0x000201XX...)
 ## Open questions / next steps
 
 1. Read the label and the version-info menu to get the real HW index, SW version and map version.
-2. When the download finishes, copy it to `firmware/` and check the hash. Extract the RAR, then the ISO, with 7z.
+2. Obtain the firmware, check the hash, and extract the RAR then the ISO with 7z.
 3. Inventory the ISO: `VERSION.TXT`, `BLSCRIPT.CFG` (does it match the HW ID?), DLSCRIPTs and `.WSH` files.
 4. Diff it against the original 5238 to see what Josi's "modified" disc changes.
 5. The owner decides the goal: plain update, maps, or deeper RE / mods (logo, coding, serial console).
