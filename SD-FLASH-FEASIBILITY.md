@@ -10,7 +10,7 @@ This is an undocumented but real capability, not a hack we have to invent.
 ## Evidence (from the decompressed SWL loader)
 
 `SWL.FLI` is a zlib stream at offset 0x21 → 11.28 MB of VxWorks/PPC code
-(`re/artifacts/SWL_decompressed.bin`). It contains:
+(the decompressed loader). It contains:
 
 - **A full SD-card driver**: `DRV_SDCARD_*` (blockRead/Write, mRead/mWrite, LL/ML layers), `sdManagerTask` with `MSDMANAGER_MOUNT_VOLUME`.
 - **DOS/FAT filesystem** (`dosFsLib.c`) and **cdromFs** — it can mount a FAT SD card and an ISO9660 CD.
@@ -53,7 +53,7 @@ found`) tell you exactly what it's doing and where it looks.
 1. **Obtain `sd_to_hdd_fw.iso` / maps-tool** and read its `DlScript.txt` and SD
    layout. This likely answers the layout question outright.
 2. **Reproduce the map SD→HDD copy** once (low risk, writes only to HDD) to
-   confirm the unit reads our SD card as an SWL source at all.
+   confirm the unit reads the SD card as an SWL source at all.
 3. **Build a minimal boot CD**: BLSCRIPT.CFG + SWL.FLI + VERSION.TXT + CRC.16,
    and a `CONFIG/DlScript.txt` that flashes APPL — but with the payload files
    on SD. Put the full SWL tree (APPS/.../FHDD6.FLI, A_HDD.FRG, CONFIG/DlScript,
@@ -73,7 +73,7 @@ found`) tell you exactly what it's doing and where it looks.
   stage's source scanning isn't in this image.
 - Source precedence when CD and SD both hold a tree.
 - Whether a DlScript-level command can call `dlsrcSetSWLPath` to redirect to SD
-  (needs RE of the DlScript command table in `SWL_decompressed.bin`).
+  (needs RE of the DlScript command table in the decompressed loader).
 - Integrity: each tree has its own `CRC.16` (CRC16 only — no signature, see
   FINDINGS §flaws), so a custom SD tree is accepted as long as its CRC matches.
   We can compute it.
@@ -136,14 +136,14 @@ and/or find the hot component (thermal/finger test in the first minutes).
 ## CONFIRMED by MapsTool itself (2026-11-04) — the working example
 
 MapsTool-3.0.7 (Java, com.luxstudio90) embeds a complete SD2HDD boot package,
-saved to `re/artifacts/mapstool_SD2HDD_bootcd/` + `mapstool_VIM_EU.WSH`. It proves
+(extracted for analysis). It proves
 the CD-small + SD-large split end to end:
 - Boot CD (small, all the laser reads): BLSCRIPT.CFG, SWL/.../SWL.FLI (3.7MB),
   WA/*.WSH, WA/CTEST.OUT, HDD/.../CONFIG/DLSCRIPT.TXT, VERSION.TXT, CRC.16.
 - DLSCRIPT just does `RUN_SHELL_SCRIPT 0 845 /cddos/WA/VIM.WSH`, EXPECTED_TIME 3379.
 - VIM.WSH reads SD and copies to HDD (the proof): `sp xcopy("/sda/mapsdvd","/hdb2/dvd")`,
   `copy("/sda/maps/hddfiles.log","/hdb2/hddfiles.log")`. SD = `/sda`; shell has copy/xcopy/cd/mkdir/ld/sp.
-- BLSCRIPT accepts 0x0002XXXX/0x0005XXXX — won't reject our 680C.
+- BLSCRIPT accepts 0x0002XXXX/0x0005XXXX — won't reject the 680C.
 
 Build methods for firmware-from-SD:
 - Method A (preferred, NAND): custom boot CD DLSCRIPT `LOAD_FIB <size> /sda/FHDD6.FLI` +
@@ -153,8 +153,8 @@ Build methods for firmware-from-SD:
 Recipe: reuse this SWL.FLI+BLSCRIPT, write custom DLSCRIPT (Method A), put FHDD6.FLI+A_HDD.FRG
 on FAT32 SD as /sda/..., recompute CRC.16, burn the tiny CD.
 
-## SD card constraint for our unit (my-gti 3983)
+## SD card constraint for the unit (my-gti 3983)
 C8/C9 (680C) predates SDXC support (a C10/C11/C12 feature). **Use an SDHC card
 ≤32 GB, FAT32** for the firmware-from-SD card. A 64 GB+ SDXC card may not be read
-by our hardware. (Map tool guides also say max 32 GB SDHC.)
+by this hardware. (Map tool guides also say max 32 GB SDHC.)
 Target firmware for the final flash: **5269 modified** (max for 680C).

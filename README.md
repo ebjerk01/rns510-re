@@ -6,7 +6,7 @@ Firmware obtained from the community repositories listed in SOURCES.md.
 
 Not the same unit as the AC8227L Android unit in the Passat CC (see `../head-unit/`).
 
-## Our unit (CONFIRMED from label photos 2026-11-04, `photos/IMG_1095.jpeg` + `IMG_1096.jpeg`)
+## The unit (confirmed from the rear label)
 
 | Field | Value |
 |---|---|
@@ -19,7 +19,7 @@ Not the same unit as the AC8227L Android unit in the Passat CC (see `../head-uni
 
 **Upgrade path:** going from 2720 to 5238 is inside "C3-C12 up to 5238" and will repartition the disk (wipes music and maps). my-gti: upgrading from 1xxx/2xxx straight to 3930/3970 does *not* repartition, but 5238 is a factory-type image, so it should. Confirm in the ISO.
 
-### Rear connectors (from the label, IMG_1096)
+### Rear connectors (from the label)
 
 - **Quadlock D (power):** 16 = SAFE, + (power), ground, Amp (remote), CAN- / CAN+.
 - **Quadlock A (speakers):** LR, LF, RF, RR ±.
@@ -39,7 +39,7 @@ Not the same unit as the AC8227L Android unit in the Passat CC (see `../head-uni
 - Serial settings: 115200 8N1, VxWorks tShell.
 - The source diagram wires the unit straight to a PC DB9, which suggests RS-232 levels, but this is not verified.
 - **Measure before connecting:** check pin 2 against pin 14 with a multimeter. About -5 to -12 V at idle means RS-232; 3.3 V means TTL and needs a 3.3 V USB-UART.
-- The pins come from the krcenov diagram and match the unlabelled pins on our label. They are still unverified on the real unit.
+- The pins come from the krcenov diagram and match the unlabelled pins on the label. They are still unverified on the real unit.
 
 Still to check: hold SETUP for 10-30 s for the version-info menu (the map version is not on the label). On 2720 the menu may not exist; it arrived with 3xxx.
 
@@ -51,8 +51,7 @@ Still to check: hold SETUP for 10-30 s for the version-info menu (the map versio
 | `refs/pages/` | Saved copies of web sources, including the archived my-gti firmware repository |
 | `refs/krcenov-wiki/` | Clone of the RNS510-Map-Viewer wiki, the main RE source (see below) |
 | `refs/krcenov-repo/` | Clone of that project's Python readers. **Reference only, not run.** |
-| `tools/` | Our own scripts |
-| `photos/` | Label and connector photos of our unit (from the cdn, 2026-11-04) |
+| `tools/` | Project scripts |
 
 ## Platform facts (from krcenov's RE wiki, built on the 5238 SWL CD)
 
@@ -103,13 +102,13 @@ boot ROM -> BLSCRIPT.CFG (disc root, chooses the script by HW ID 0x000201XX...)
 | C14 | 6276 |
 
 **Definitive HW↔firmware map (my-gti 3983, saved refs/pages/hw-sw-versions-table.txt):**
-- **Our unit 1T0035680C (C8/C9, HW Vehicle 0xC801, HW Radio 0006): max MODIFIED firmware = 5269.** Unmodified max 2840; from-factory 2660.
-- 5270 = C10/C11/C12 (0xCA01/0xCC01, 680D/F/G/H/J/L/P/Q). 6270 = C14. **Do NOT flash 5270+/6270 on our 680C.**
+- **The unit 1T0035680C (C8/C9, HW Vehicle 0xC801, HW Radio 0006): max MODIFIED firmware = 5269.** Unmodified max 2840; from-factory 2660.
+- 5270 = C10/C11/C12 (0xCA01/0xCC01, 680D/F/G/H/J/L/P/Q). 6270 = C14. **Do NOT flash 5270+/6270 on the 680C.**
 - 5238 (what we have) is compatible but not the newest; **5269 modified is the target firmware for the final flash.**
-- **SD-card limit:** 2TB SDXC support is a C10/C11/C12 feature. Our C8/C9 likely reads **SDHC (≤32 GB) FAT32 only** — size the SD-flash card accordingly.
+- **SD-card limit:** 2TB SDXC support is a C10/C11/C12 feature. The C8/C9 likely reads **SDHC (≤32 GB) FAT32 only** — size the SD-flash card accordingly.
 
 - The 5238 Josi SWL CD names C3/C4A/C5C/C6/C10/C12 in `#Steckbrief`, but not C8.
-- **Before burning anything, check that `BLSCRIPT.CFG` matches our HW ID.**
+- **Before burning anything, check that `BLSCRIPT.CFG` matches the HW ID.**
 - **5238 wipes maps.**
 - Working firmware: `RNS_510_FW_5238_update_modified.rar`, Josi's modified 5238 (VIM + test mode), about 493 MB.
 
@@ -148,7 +147,7 @@ boot ROM -> BLSCRIPT.CFG (disc root, chooses the script by HW ID 0x000201XX...)
   - The drive must have no jumper.
   - SWL 3800-3910 (3810 is the one people name) partitions and formats a blank disk. 5238 is said not to.
   - Cloning an original RNS disk image (Acronis, AOMEI, Paragon) also works.
-- **Our reading of the 5238 SWL (krcenov):** the HDD ECU step runs `MULTI_VERIFY_HDD`, then `FILE_UPDATE /hdb2/speech/...`. With no `/hdb2` it has nowhere to write, which fits "stuck at HDD". Verify this in our ISO.
+- **Reading of the 5238 SWL (krcenov):** the HDD ECU step runs `MULTI_VERIFY_HDD`, then `FILE_UPDATE /hdb2/speech/...`. With no `/hdb2` it has nowhere to write, which fits "stuck at HDD". Verify this in the ISO.
 - **Plan:**
   1. Zero the start and end of the drive on Linux, through an IDE-to-USB adapter.
   2. Remove the jumper.
@@ -156,7 +155,7 @@ boot ROM -> BLSCRIPT.CFG (disc root, chooses the script by HW ID 0x000201XX...)
   4. Then go up to 5238.
 - **Recovery** if the unit won't boot: `swl_fix.iso`.
 
-### Diagnosis from the screen photos (IMG_1146/1150/1151/1152, taken 2026-08-07/09)
+### Diagnosis from the on-screen loading status
 
 - **Disc shown:** `#CD:P005.157.301`, `#DATE:2010-11-26`, a `.301` update disc from the 2xxx era.
 - **Progress:** SWL 100%, HOST 100%, then **APPL stuck at 5%**. HDD, RADIO, MPEG and GATEWAY all stayed at 0%. Total 29%, "52 mins" remaining.
@@ -170,13 +169,13 @@ boot ROM -> BLSCRIPT.CFG (disc root, chooses the script by HW ID 0x000201XX...)
 - **Reported, not yet checked:** on a PC, through a USB-PATA adapter, the drive showed partitions, and the FAT32 partition had content. If the unit created them, its disk access works. Check the partition layout read-only next time the disk is available.
 - **Next test:** burn the update to DVD-R, Verbatim at 4x, written as a disc image, finalised and verified. The DVD laser is separate from the CD laser.
 
-## 5238 modified ISO, checked 2026-11-04 (`firmware/5238_modified/`)
+## 5238 modified ISO (checked)
 
 - **RAR:** sha256 `20292e13588fd815756ed8ed80387f3c05ad0792ef39e0de4bc424cf7b2213c1`.
 - **ISO:** `RNS_510_FW_5238_update_modified.iso`, 717,000,704 bytes, sha256 `ea9db70bfd1db4a6b6bade33a8d48c258e91266add5f554e6799c6a212a93581`. It fits an 80-min CD-R (737,280,000 bytes) and of course a DVD-R.
 - **How to extract:** `unar` for the RAR (the Debian 7z has no RAR codec), then `7z x -tiso` for the ISO. Without `-tiso`, 7z reads the broken UDF layer and gets only 36 MB.
 - **`VERSION.TXT`:** `#CD:P005.670.306`, dated 2012-10-19, "unofficial SWL CD by josi", Steckbrief C3/C4A/C5C/C6/C10/C12, CRC16 103e.
-- **`BLSCRIPT.CFG`:** accepts product `0x000201XX` / `0x0002XXXX` / `0x0005XXXX` / `0x0006XXXX` with any HW version, so the boot loader will not reject our unit.
+- **`BLSCRIPT.CFG`:** accepts product `0x000201XX` / `0x0002XXXX` / `0x0005XXXX` / `0x0006XXXX` with any HW version, so the boot loader will not reject the unit.
 - **Update order (`ECUORDER.TXT`):** SWL, HOST, APPS, HDD, restart, RADIO, MPEG, VUCI (gateway), DAB, restart.
 - **The APPL step** (e.g. `APPS/SILVER_1/EURSBHDD/CONFIG/DLSCRIPT.TXT`):
   - `DEL_LANG.WSH` (flash only)
