@@ -14,30 +14,30 @@ RE wiki (see *Sources*) and adds original firmware/loader analysis on top.
 
 | Document | Contents |
 |---|---|
-| `README.md` | This overview: the unit, the platform, how flashing works, compatibility, the real-world flash problem, and sources |
-| `FINDINGS.md` | The mod surface, security flaws, performance, the UI screen map, and the SWL loader's source-path / CRC internals |
-| `SD-FLASH-FEASIBILITY.md` | Flashing from an SD card instead of a dying CD laser — mechanism, the confirmed SD layout, and the plan |
-| `3810-analysis.md` | Firmware 3810: SD-flash, the USB/RNDIS diagnostic web server, CAF coding files, 3810-vs-5238 |
-| `can-bus-findings.md` | CAN / vehicle-data: the ST10 gateway, what signals the unit uses (no powertrain data) |
-| `gateway-st10-findings.md` | ST10 gateway (GATEWAY.FLI, C166): CAN handlers, DTC table, theft-protection state machine |
-| `map-inspection.md` | West Europe V17 (CD_8557) map disc format, POI database, no speed-camera layer |
-| `poi-db-schema.md` | POI.DB3 SQLite schema, the query catalog, and a custom-POI recipe |
-| `mapstool-findings.md` | maps-tool 2.0.2 (Java): per-region SD→HDD disc generator, confirms the SD mechanism |
-| `fhdd6-version-diff.md` | What newer builds (5274/6276) add: overlay UI, SD import, DAB, a JReg settings layer |
-| `coding-reference.md` | Consolidated coding: HU_CODING long coding, 0x400 registers, JReg settings, gateway items |
-| `ui-structure-findings.md` | Java UI structure: 822 menus, transition rules, the engineering screens (coding-gated) |
-| `deadzone-base-recovery.md` | The FHDD6 ">9 MB dead zone" resolved — the base holds; refs are GOT-based |
-| `5274-stock-vs-modified.md` | What a "modified" firmware disc actually changes (5274): compatibility widening + CRC, not feature injection |
-| `6276-analysis.md` | The C14 6276 build, and why a `0x0006` BLSCRIPT block is *not* a compatibility guarantee |
-| `setconfig-analysis.md` | What the third-party "SetConfig" coding tool is and how it works (analysis only; no tool/keys/bypass) |
-| `partition-sizing.md` | Premade `MULTI_VERIFY_HDD` partition config + suggested sizes per common disk size |
-| `flashkit/` | **Experimental, untested** builder for a CD+SD prepare/flash kit (builds the disc; ships no firmware) |
-| `SOURCES.md` | Credits and prior work |
-| `artifacts/ui_screens_86.txt` | The 86 UI screen/menu class names |
-| `tools/rns510_compat.py` | Firmware ↔ hardware compatibility checker (WORKS/UNSTABLE/INCOMPATIBLE) |
-| `tools/rns510_serial.py` | Serial console client: read/write coding + recover the theft PIN (needs on-unit verification) |
-| `tools/partition/` | Ready-to-copy `MULTI_VERIFY_HDD` partition config fragments |
-| `tools/ghidra_export.py` | The Ghidra post-script used in the native analysis |
+| [`README.md`](README.md) | This overview: the unit, the platform, how flashing works, compatibility, the real-world flash problem, and sources |
+| [`FINDINGS.md`](FINDINGS.md) | The mod surface, security flaws, performance, the UI screen map, and the SWL loader's source-path / CRC internals |
+| [`SD-FLASH-FEASIBILITY.md`](SD-FLASH-FEASIBILITY.md) | Flashing from an SD card instead of a dying CD laser — mechanism, the confirmed SD layout, and the plan |
+| [`3810-analysis.md`](3810-analysis.md) | Firmware 3810: SD-flash, the USB/RNDIS diagnostic web server, CAF coding files, 3810-vs-5238 |
+| [`can-bus-findings.md`](can-bus-findings.md) | CAN / vehicle-data: the ST10 gateway, what signals the unit uses (no powertrain data) |
+| [`gateway-st10-findings.md`](gateway-st10-findings.md) | ST10 gateway (GATEWAY.FLI, C166): CAN handlers, DTC table, theft-protection state machine |
+| [`map-inspection.md`](map-inspection.md) | West Europe V17 (CD_8557) map disc format, POI database, no speed-camera layer |
+| [`poi-db-schema.md`](poi-db-schema.md) | POI.DB3 SQLite schema, the query catalog, and a custom-POI recipe |
+| [`mapstool-findings.md`](mapstool-findings.md) | maps-tool 2.0.2 (Java): per-region SD→HDD disc generator, confirms the SD mechanism |
+| [`fhdd6-version-diff.md`](fhdd6-version-diff.md) | What newer builds (5274/6276) add: overlay UI, SD import, DAB, a JReg settings layer |
+| [`coding-reference.md`](coding-reference.md) | Consolidated coding: HU_CODING long coding, 0x400 registers, JReg settings, gateway items |
+| [`ui-structure-findings.md`](ui-structure-findings.md) | Java UI structure: 822 menus, transition rules, the engineering screens (coding-gated) |
+| [`deadzone-base-recovery.md`](deadzone-base-recovery.md) | The FHDD6 ">9 MB dead zone" resolved — the base holds; refs are GOT-based |
+| [`5274-stock-vs-modified.md`](5274-stock-vs-modified.md) | What a "modified" firmware disc actually changes (5274): compatibility widening + CRC, not feature injection |
+| [`6276-analysis.md`](6276-analysis.md) | The C14 6276 build, and why a `0x0006` BLSCRIPT block is *not* a compatibility guarantee |
+| [`setconfig-analysis.md`](setconfig-analysis.md) | What the third-party "SetConfig" coding tool is and how it works (analysis only; no tool/keys/bypass) |
+| [`partition-sizing.md`](partition-sizing.md) | Premade `MULTI_VERIFY_HDD` partition config + suggested sizes per common disk size |
+| [`flashkit/`](flashkit/) | **Experimental, untested** builder for a CD+SD prepare/flash kit (builds the disc; ships no firmware) |
+| [`SOURCES.md`](SOURCES.md) | Credits and prior work |
+| [`artifacts/ui_screens_86.txt`](artifacts/ui_screens_86.txt) | The 86 UI screen/menu class names |
+| [`tools/rns510_compat.py`](tools/rns510_compat.py) | Firmware ↔ hardware compatibility checker (WORKS/UNSTABLE/INCOMPATIBLE) |
+| [`tools/rns510_serial.py`](tools/rns510_serial.py) | Serial console client: read/write coding + recover the theft PIN (needs on-unit verification) |
+| [`tools/partition/`](tools/partition/) | Ready-to-copy `MULTI_VERIFY_HDD` partition config fragments |
+| [`tools/ghidra_export.py`](tools/ghidra_export.py) | The Ghidra post-script used in the native analysis |
 
 MIT-licensed (`LICENSE`). The tools are clean-room — built from this project's own
 research, not copied from the prior repos; see `SOURCES.md`.
