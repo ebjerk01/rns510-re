@@ -53,6 +53,7 @@ cloned reference material are **not** included (copyright + size).
 | `SD-FLASH-FEASIBILITY.md` | Flashing from SD card — mechanism and feasibility |
 | `3810-analysis.md` | Firmware 3810 analysis: SD-flash, USB/RNDIS diagnostic server, CAF coding files, 3810-vs-5238 |
 | `5274-stock-vs-modified.md` | What a "modified" firmware disc actually changes (5274): compatibility widening + CRC, not feature injection |
+| `setconfig-analysis.md` | What the third-party "SetConfig" coding tool is and how it works (analysis only; no tool/keys/bypass) |
 | `SOURCES.md` | Credits and prior work |
 | `artifacts/ui_screens_86.txt` | The 86 UI screen/menu class names |
 | `tools/ghidra_export.py` | Ghidra post-script used in the native analysis |
