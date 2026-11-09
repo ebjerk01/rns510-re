@@ -1,0 +1,10 @@
+title: RNS-510 Reverse Engineering
+description: >-
+  Reverse-engineering notes on the VW RNS-510 (Continental / Siemens VDO,
+  MPC5200 / VxWorks) navigation head unit — firmware, SD-card flashing, vehicle
+  coding, hardware/firmware compatibility, the map format, and tools. Analysis
+  only; no proprietary binaries.
+theme: jekyll-theme-cayman
+# GitHub Pages default plugins (jekyll-seo-tag, jekyll-optional-front-matter,
+# jekyll-relative-links) are on automatically: they add SEO meta tags, render the
+# .md docs even without front matter, and rewrite the doc-to-doc .md links.
