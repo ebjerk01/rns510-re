@@ -1,0 +1,28 @@
+# RNS-510 partition config fragments — MULTI_VERIFY_HDD lines for a SWL DLSCRIPT.
+#
+# The unit partitions and formats the disk ITSELF from this line during a flash.
+# Sizes are PERCENTAGES of the whole disk, so they scale to any disk size.
+# Match the partition count + FS types to the firmware generation you are flashing.
+# See partition-sizing.md for the per-disk-size tables and warnings.
+#
+# Format: MULTI_VERIFY_HDD <count> <fsType1> <pct1> <fsType2> <pct2> [<fsType3> <pct3>] 0 0
+# Roles: P1 = maps, P2 = music/speech, P3 = POI (3-partition firmware only).
+# Percentages must sum to 100. Keep the trailing "0 0".
+
+# --- Stock layouts (safe defaults; pick the one matching your firmware) ---
+
+# 1xxx / 2xxx firmware  -> 2 partitions, 67/33, FS types 3/2
+MULTI_VERIFY_HDD 2 3 67 2 33 0 0
+
+# 3xxx firmware (e.g. 3810)  -> 3 partitions, 50/25/25, FS types 3/2/2
+MULTI_VERIFY_HDD 3 3 50 2 25 2 25 0 0
+
+# 5xxx firmware (e.g. 5238 / 5269)  -> 3 partitions, 50/25/25, FS types 3/2/3
+MULTI_VERIFY_HDD 3 3 50 2 25 3 25 0 0
+
+# --- Custom ratios for 5xxx (experimental, FS types 3/2/3) ---
+# More music      (40/40/20):  MULTI_VERIFY_HDD 3 3 40 2 40 3 20 0 0
+# Max music       (30/50/20):  MULTI_VERIFY_HDD 3 3 30 2 50 3 20 0 0
+# Music, tiny POI (45/45/10):  MULTI_VERIFY_HDD 3 3 45 2 45 3 10 0 0
+# Big maps        (60/20/20):  MULTI_VERIFY_HDD 3 3 60 2 20 3 20 0 0
+# Balanced        (40/35/25):  MULTI_VERIFY_HDD 3 3 40 2 35 3 25 0 0

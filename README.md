@@ -21,6 +21,7 @@ RE wiki (see *Sources*) and adds original firmware/loader analysis on top.
 | `5274-stock-vs-modified.md` | What a "modified" firmware disc actually changes (5274): compatibility widening + CRC, not feature injection |
 | `6276-analysis.md` | The C14 6276 build, and why a `0x0006` BLSCRIPT block is *not* a compatibility guarantee |
 | `setconfig-analysis.md` | What the third-party "SetConfig" coding tool is and how it works (analysis only; no tool/keys/bypass) |
+| `partition-sizing.md` | Premade `MULTI_VERIFY_HDD` partition config + suggested sizes per common disk size |
 | `SOURCES.md` | Credits and prior work |
 | `artifacts/ui_screens_86.txt` | The 86 UI screen/menu class names |
 | `tools/ghidra_export.py` | The Ghidra post-script used in the native analysis |
