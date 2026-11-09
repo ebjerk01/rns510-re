@@ -68,9 +68,13 @@ stack and inject simulated GPS — far richer and more accessible than the seria
 console. **Open question:** whether a *production* kernel starts telnetd/httpd and what
 `httpAccessCheck` allows. A separate **"full development kernel"** (`SDC_DB_DEVF`)
 exists, and the HTTP/telnet features appear tied to it / `_devmode`. The exact access
-rule needs the decompiled `httpAccessCheck` — which sits just past the ~9 MB boundary
-where the recovered load base stops mapping (the wiki's documented dead zone), so its
-string refs don't resolve without a second load base for the >9 MB region (unrecovered).
+rule needs the decompiled `httpAccessCheck`, which sits past the ~9 MB point.
+**Update (see `deadzone-base-recovery.md`):** this is *not* a separate-base problem —
+the load base `0xf688dcf4` holds past 9 MB (verified against code + symbols at
+8.9–11.5 MB). The HTTP string refs are GOT/pointer-table based, not absolute
+`lis/addi`, which is why earlier absolute scans missed them. A full-region Ghidra
+import at that base (with GOT resolution) decompiles `httpAccessCheck` — no exotic
+base recovery needed.
 
 Note: the **SWL loader** (`SWL.FLI` decompressed) *does* have a clean recoverable base
 (validated against its own format strings), so the loader's flash/format/SD logic is

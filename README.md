@@ -19,7 +19,14 @@ RE wiki (see *Sources*) and adds original firmware/loader analysis on top.
 | `SD-FLASH-FEASIBILITY.md` | Flashing from an SD card instead of a dying CD laser — mechanism, the confirmed SD layout, and the plan |
 | `3810-analysis.md` | Firmware 3810: SD-flash, the USB/RNDIS diagnostic web server, CAF coding files, 3810-vs-5238 |
 | `can-bus-findings.md` | CAN / vehicle-data: the ST10 gateway, what signals the unit uses (no powertrain data) |
+| `gateway-st10-findings.md` | ST10 gateway (GATEWAY.FLI, C166): CAN handlers, DTC table, theft-protection state machine |
 | `map-inspection.md` | West Europe V17 (CD_8557) map disc format, POI database, no speed-camera layer |
+| `poi-db-schema.md` | POI.DB3 SQLite schema, the query catalog, and a custom-POI recipe |
+| `mapstool-findings.md` | maps-tool 2.0.2 (Java): per-region SD→HDD disc generator, confirms the SD mechanism |
+| `fhdd6-version-diff.md` | What newer builds (5274/6276) add: overlay UI, SD import, DAB, a JReg settings layer |
+| `coding-reference.md` | Consolidated coding: HU_CODING long coding, 0x400 registers, JReg settings, gateway items |
+| `ui-structure-findings.md` | Java UI structure: 822 menus, transition rules, the engineering screens (coding-gated) |
+| `deadzone-base-recovery.md` | The FHDD6 ">9 MB dead zone" resolved — the base holds; refs are GOT-based |
 | `5274-stock-vs-modified.md` | What a "modified" firmware disc actually changes (5274): compatibility widening + CRC, not feature injection |
 | `6276-analysis.md` | The C14 6276 build, and why a `0x0006` BLSCRIPT block is *not* a compatibility guarantee |
 | `setconfig-analysis.md` | What the third-party "SetConfig" coding tool is and how it works (analysis only; no tool/keys/bypass) |
