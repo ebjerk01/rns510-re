@@ -186,6 +186,33 @@ Extraction note: use `unar` for the RAR (the Debian 7z has no RAR codec), then
 `7z x -tiso` for the ISO (without `-tiso`, 7z reads the broken UDF layer and recovers
 only ~36 MB).
 
+## FAQ
+
+**My RNS-510 won't flash — it gets stuck at APPL (around 5%) then errors.**
+That signature (SWL/HOST load fine, APPL stalls, SOFTWARE LOADING ERROR 010302 / "SWL
+Media" error, the drive seeking) is almost always a **CD read failure, not the disk** —
+APPL is the first ~170 MB read off the disc. Try a **DVD-R** (separate laser) or the
+SD-flash route. See the "real-world problem" section above and `SD-FLASH-FEASIBILITY.md`.
+
+**Can I flash the RNS-510 firmware from an SD card instead of a dying CD?**
+The loader has native SD support and resolves its flash source from a settable path,
+so a tiny ~4 MB boot CD can bootstrap and the payload can come from SD. Mechanism and
+the confirmed SD layout: `SD-FLASH-FEASIBILITY.md` and `flashkit/`.
+
+**Which firmware is safe for my unit?**
+Match the firmware generation to the hardware class, not the bootloader's acceptance.
+A `1T0035680C` (C8/C9) unit's safe max is ~5269; do not flash 5270+/6276. Use
+`tools/rns510_compat.py` or see the compatibility section.
+
+**How do I unlock video-in-motion / testmode / hidden menus?**
+These are plaintext coding, not firmware patches: Testmode `0x21=01` and the 300 km/h
+video-in-motion `0x0B3A=012C` (see `coding-reference.md`). The engineering/service
+screens already exist and unlock via Testmode coding (`ui-structure-findings.md`).
+
+**Is an HDD → SSD upgrade worth it, and what partition sizes?**
+Yes — it removes seek latency (the biggest responsiveness gain). The unit formats the
+disk itself; sizes are percentage-based. See `partition-sizing.md`.
+
 ## Sources
 
 - krcenov RNS510-Map-Viewer wiki — firmware RE, boot chain, coding, serial console,
