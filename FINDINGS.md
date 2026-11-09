@@ -141,3 +141,40 @@ Every SWL loader can partition/format a blank disk via the functions above; 3810
 was just the version people happened to have a working format script for. It
 remains a useful, forum-proven **fallback** if the `MULTI_VERIFY`/`FORMHDB`
 approach misbehaves on a particular unit, but it is not a prerequisite.
+
+---
+
+## SWL loader: source path & integrity (from decompiling SWL.FLI)
+
+Decompiling the analyzed SWL loader (recovered load base `0xfedae88c`) pins down
+the flash mechanics behind the SD-flash plan and confirms the CRC weakness:
+
+- **The flash source is a single variable, not a hardcoded path.** The CD mounts
+  at `/cddos` (`mountpoint=/cddos`, `CDDOS_VOLUME_NAME`), but `LOAD_FIB` /
+  `INSTALL_FRAGMENT` resolve their file through **`dlProcessStruct.currentSourcePath`**,
+  set by `dlsrcSetSWLPath` ("seting currentSourcePath to %s") to whichever source
+  is active. `dlsProcessScript - Command is LOAD_FIB` dispatches to the FIB
+  module-load loops. So flashing the firmware (NAND) from `/sda` is supported once
+  SD is the active source — not just copying map data.
+- **SD is a first-class SWL source.** `dlsrcRegisterSources` enumerates
+  `dlsrcDvdEventReg` / **`dlsrcSdEventReg`** / `dlsrcHDDEventReg` symmetrically and
+  builds one source table probed identically per source. SD is a peer of DVD/HDD,
+  not a special case.
+- **Native SD trace sink: `/sda/trace/LogTraceOut.txt`.** The loader can write its
+  own diagnostics straight to the SD card — a way to capture a profile/dump run
+  without a serial cable.
+- **CRC16 is advisory, confirmed in code (flaw #1).** `dlsFindCRCString` logs
+  `old csum value 0x%x` / `new csum value 0x%x`, and on mismatch
+  `checksum was different - but only a warning`, then continues. A custom disc with
+  a mismatched `CRC.16` still runs — which is why every community mod works. (The
+  flashed FIB image has its own enforced checksum, satisfied by genuine bytes.)
+
+### Boot-delay performance lead — closed with evidence
+The boot-manager statechart contains named delay timers, each firing `bmgrTimer`
+with an `fp0` duration. Recovered values: **`workaround_delay_faster_radio` fp0 = 0**
+— the one timer whose name promises a faster radio is already zero in shipping
+firmware. The other non-zero delays (`delay_before_reset`=15,
+`delay_for_symptoms_output`=30, `delay_instrument_cluster`≈6) sit in
+reset/diagnostic/instrument-cluster-handshake paths, not the normal boot path.
+Conclusion: there is no hidden "boot faster" knob to flip — an SSD swap is the real
+responsiveness win.

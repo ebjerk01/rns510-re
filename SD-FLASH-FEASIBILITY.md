@@ -157,3 +157,26 @@ C8/C9 (680C) predates SDXC support (a C10/C11/C12 feature). **Use an SDHC card
 ≤32 GB, FAT32** for the firmware-from-SD card. A 64 GB+ SDXC card may not be read
 by this hardware. (Map tool guides also say max 32 GB SDHC.)
 Target firmware for the final flash: **5269 modified** (max for 680C).
+
+## RESOLVED — SD layout confirmed from a working maps-tool SD→HDD disc
+
+Recovered the maps-tool `EU_sd_to_hdd_fw.iso` (a tiny CD + big-payload-on-SD disc)
+and read its scripts — the authoritative, shipping template. It closes the two
+remaining SD-flash unknowns:
+
+- **SD card (FAT32) layout:** root holds **`/sda/mapsdvd/`** (the whole map tree:
+  db, config, tpd, EDB/POI, telemat/tmc2/{lan,loc}, dbal, speech/parts) and
+  **`/sda/maps/hddfiles.log`**. The copy is `sp xcopy("/sda/mapsdvd","/hdb2/dvd")`
+  in `WA/VIM.WSH`. Filename case does not matter (FAT is case-insensitive).
+- **`LOAD_FIB` from `/sda` is sound** (see FINDINGS "source path"): the loader reads
+  from `currentSourcePath`, not a hardcoded `/cddos`, so firmware-from-SD works once
+  SD is the active source. The maps-tool is the Method-B proof; firmware is the same
+  CD+SD split with the DLSCRIPT swapped to `LOAD_FIB /sda/FHDD6.FLI`.
+- **Output capture** for a read-only profile run has a native sink:
+  `/sda/trace/LogTraceOut.txt` — no shell `>` redirection needed.
+- **Boot-CD template (verbatim):** `BLSCRIPT.CFG` matches the hardware and
+  `LOAD_FLASH_IMAGE //cddos/SWL/SILVER_1/RNSMIDEC/SWL/SWL.FLI`; `DLSCRIPT.TXT` =
+  `BOOTMODE_SWL` / `SHOW_SCREEN` / `RUN_SHELL_SCRIPT /cddos/WA/VIM.WSH` /
+  `FINISHED_ECU`. `VIM.WSH` also applies the standard coding (Testmode `0x21=01`,
+  300 km/h VIM `0x0B3A=012C`). `FORMHDB1.WSH` = `hdTermConfigurePartition(2,2,67,33)`
+  + `hdTermFormat("/hdb1",3)` for a 2xxx layout.
