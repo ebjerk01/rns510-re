@@ -1,8 +1,8 @@
 # RNS-510 project
 
-The VW RNS-510 navigation head unit (Continental / ex-Siemens VDO, Wetzlar).
-Started 2026-11-04. The firmware is downloading on the PC (`a PC`,
-`~/Downloads`).
+Reverse-engineering notes for the VW RNS-510 navigation head unit
+(Continental / ex-Siemens VDO, Wetzlar). Analysis only — no firmware binaries,
+serial numbers, or personal data.
 
 ## The unit (confirmed from the rear label)
 
