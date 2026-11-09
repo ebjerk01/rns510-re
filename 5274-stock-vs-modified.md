@@ -37,17 +37,22 @@ scripts already; the modder did not add them. The `SetRegDataHex`/`SetCoding`
 values are unchanged between the two. One script is added in modified:
 `WA/EURSEHDD.WSH`.
 
-## Compatibility is gated by BLSCRIPT, not the Steckbrief
-Despite the Steckbrief listing C6/C10/C12, what actually gates loading is
-`BLSCRIPT.CFG`. The modified 5274's BLSCRIPT has match blocks for `0x000201XX`,
+## BLSCRIPT has a 0006 block — but that is NOT a compatibility guarantee
+The modified 5274's `BLSCRIPT.CFG` has match blocks for `0x000201XX`,
 `0x0002XXXX`, `0x0005XXXX` **and `0x0006XXXX`** (HW_MODULE 01.08 / HW_VERSION 01.01
-/ CUSTOMER_PRODUCT 01.07). A unit whose HW Radio ID is `0006` is matched by the
-`[0x0006XXXX…]` block, so the bootloader accepts the disc even though the Steckbrief
-text does not spell out that hardware class.
+/ CUSTOMER_PRODUCT 01.07), so the bootloader will *begin* loading on a 0006-class
+radio. **However** — see `6276-analysis.md` — the unambiguously-C14 6276 firmware
+carries the *same* `[0x0006XXXX]` block, so this block is a generic
+bootloader-acceptance catch-all, **not** proof that the application image suits the
+hardware. The authoritative compatibility signal is the firmware generation
+(`#VwSwPartNumber` / `#Steckbrief`) cross-referenced with the community table:
+5274 is a **C6/C10/C12** build, and a 680C (C8/C9) unit's safe max is **~5269**.
+Treat 5274 on a 680C as out-of-range, not endorsed by the BLSCRIPT match.
 
 ## Takeaways
 - The "modified firmware" mystique is mostly **compatibility widening + CRC fix**,
   not secret feature unlocks.
 - Testmode + 300 km/h video-in-motion are **stock** in the delivery coding scripts.
-- The `0x0006XXXX` BLSCRIPT match block is the thing to preserve when building a
-  custom flash/SD disc for a 0006-class radio.
+- A `0x0006XXXX` BLSCRIPT block must be preserved when building a custom disc for a
+  0006-class radio, but on its own it does not establish that a given firmware
+  generation is safe for that hardware.
