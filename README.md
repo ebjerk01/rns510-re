@@ -27,7 +27,13 @@ RE wiki (see *Sources*) and adds original firmware/loader analysis on top.
 | `flashkit/` | **Experimental, untested** builder for a CD+SD prepare/flash kit (builds the disc; ships no firmware) |
 | `SOURCES.md` | Credits and prior work |
 | `artifacts/ui_screens_86.txt` | The 86 UI screen/menu class names |
+| `tools/rns510_compat.py` | Firmware ↔ hardware compatibility checker (WORKS/UNSTABLE/INCOMPATIBLE) |
+| `tools/rns510_serial.py` | Serial console client: read/write coding + recover the theft PIN (needs on-unit verification) |
+| `tools/partition/` | Ready-to-copy `MULTI_VERIFY_HDD` partition config fragments |
 | `tools/ghidra_export.py` | The Ghidra post-script used in the native analysis |
+
+MIT-licensed (`LICENSE`). The tools are clean-room — built from this project's own
+research, not copied from the prior repos; see `SOURCES.md`.
 
 Primary external source — the krcenov RNS510-Map-Viewer wiki:
 <https://github.com/krcenov/RNS510-Map-Viewer>
