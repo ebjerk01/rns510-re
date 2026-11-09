@@ -1,0 +1,30 @@
+# rns510-flashkit: copy map/speech/POI data from SD (/sda) to HDD (/hdb*)
+# Mirrors the structure the firmware's own map tool creates (VIM.WSH).
+# /sda layout (prepared by the PC builder):  /sda/mapsdvd/... , /sda/maps/ , /sda/speech/
+cd("/hdb2")
+mkdir("dvd")
+cd("/hdb2/dvd")
+mkdir("db")
+mkdir("config")
+mkdir("tpd")
+mkdir("EDB")
+cd("/hdb2/dvd/EDB")
+mkdir("POI")
+cd("/hdb2/dvd")
+mkdir("telemat")
+cd("/hdb2/dvd/telemat")
+mkdir("tmc2")
+cd("/hdb2/dvd/telemat/tmc2")
+mkdir("lan")
+mkdir("loc")
+cd("/hdb2/dvd")
+mkdir("dbal")
+mkdir("speech")
+cd("/hdb2/dvd/speech")
+mkdir("parts")
+cd("/hdb2/dvd")
+# bulk copy the map tree from SD:
+sp xcopy("/sda/mapsdvd","/hdb2/dvd")
+copy("/sda/maps/hddfiles.log", "/hdb2/hddfiles.log")
+IL_Flush
+IL_Flush

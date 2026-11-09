@@ -1,0 +1,17 @@
+BOOTMODE_SWL
+SHOW_SCREEN 1 16 SWL_SCREEN_PROGRESS
+EXPECTED_TIME 60
+# 1) Partition + format the (blank) disk. Recipe = <count> <fsType pct> ...
+#    3xxx/5xxx layout (3 partitions, 50/25/25%, FS types 3/2/3) — matches the map tool.
+#    For a 1xxx/2xxx target use the 2-partition form instead (see README).
+MULTI_VERIFY_HDD 3 3 50 2 25 3 25 0 0
+EXPECTED_TIME 3600
+# 2) Copy map/speech/POI data from the SD card (/sda) into /hdb*.
+RUN_SHELL_SCRIPT 0 0 /cddos/WA/COPYDATA.WSH
+# 3) OPTIONAL — flash the application firmware to NAND from SD instead of CD.
+#    Uncomment once LOAD_FIB-from-/sda is confirmed on hardware. Sizes must match
+#    the genuine files exactly (the flashed-image checksum is enforced).
+# INSTALL_FRAGMENT 160 85254064 /sda/fw/A_HDD.FRG
+# LOAD_FIB 20 85658916 /sda/fw/FHDD6.FLI
+# UPDATE_SYS_CONFIG
+FINISHED_ECU

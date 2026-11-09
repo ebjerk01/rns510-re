@@ -1,0 +1,37 @@
+# rns510-flashkit: read-only unit profile dump -> SD card (/sda)
+# Commands below are confirmed present in the SWL loader's VxWorks shell
+# (hdTermShow*, dosFsShow, iosDevShow, devs). OUTPUT CAPTURE is the one
+# unvalidated part: VxWorks shell has no ">" redirect. Two strategies, test both:
+#   A) run the show cmds (they print to serial + InfoLog), then copy InfoLog to SD
+#   B) the loader has a built-in /sda/trace/ path; enabling trace may capture it
+#
+# Create the output dir on SD first.
+mkdir("/sda/profile")
+
+# --- storage devices + partitions ---
+iosDevShow
+devs
+hdTermShowDeviceIdentification
+hdTermShowDeviceStatus
+hdTermShowApplRegisterStatus
+
+# --- filesystem per partition (sizes, FS type, free space) ---
+dosFsShow "/hdb1"
+dosFsShow "/hdb2"
+dosFsShow "/hdb3"
+
+# --- raw MBR (first sector) of the master device, for exact partition geometry ---
+# (device node name confirmed at runtime from iosDevShow; adjust if different)
+# copy the first 512 bytes of the whole-disk device to SD:
+# cp "/ataMaster", "/sda/profile/mbr.bin"   # validate device name on unit
+
+# --- coding / registers (CTEST.OUT already loaded by DLSCRIPT) ---
+# ReadRegData / TestCoding dump current coding array:
+TestCoding(0x400)
+ReadRegData(0x21)
+ReadRegData(0x0B3A)
+
+# --- flush InfoLog so the above is persisted, then copy it to SD ---
+IL_Flush
+# copy("/tffs0/data/diag/cfg/InfoLog", "/sda/profile/infolog.txt")  # validate path
+IL_Flush
