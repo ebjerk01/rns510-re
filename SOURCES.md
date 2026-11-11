@@ -16,6 +16,24 @@ Analysis builds heavily on prior public work:
   compatibility checker. https://github.com/Edward03YT/rns510-companion
 - **SlashGordon — rns510-code-finder** (MIT): serial PIN brute-forcer.
   https://github.com/SlashGordon/rns510-code-finder
+### Related projects — the CAN / BAP side
+
+These reverse-engineer the on-wire CAN/BAP channel to the RNS-510 (the counterpart to
+this repo's firmware-side RE); the BAP CAN IDs in `can-bus-findings.md` come from them:
+
+- **majonezz — rns510-tv-input**: a Linux SocketCAN daemon emulating a MOST/BAP
+  TV-tuner to the RNS-510 (BAP IDs 0x6D3/0x6C7/0x602, ignition 0x575, radio 0x661).
+  https://github.com/majonezz/rns510-tv-input
+- **AugustoS97 — CanBus-Radio-VAG**: waking a VAG radio on a bench; confirms the
+  0x575 ignition frame and shares an infotainment DBC.
+  https://github.com/AugustoS97/CanBus-Radio-VAG
+- **DSchndr — mfd2plusplus**: MFD2 (RNS-510's sibling) CarPlay + custom
+  instrument-cluster messages. https://github.com/DSchndr/mfd2plusplus
+- **ValeraBat — VW_CDC_ESP32BT1036C**: ESP32 CD-changer/Bluetooth emulator over the
+  radio bus. https://github.com/ValeraBat/VW_CDC_ESP32BT1036C
+
+### Other references
+
 - **my-gti.com** — firmware repository and the HW↔SW (firmware) versions table.
 - **paulroberts69.wordpress.com** — SSD swap and firmware/maps upgrade write-ups.
 - **altechnative.net** — RNS-510 firmware/maps update guide.

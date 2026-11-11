@@ -40,6 +40,27 @@ hits (the "boost"/"rpm" string hits are `BOOSTER_DSP4` amp coding, Java GC "boos
 The gateway exposes a block of MOST FBlock function IDs (~0xE15–0xE3C range, 47 values) to
 the app, logged as `MOST FktId=0x%03Xh`. Mapping each to a handler needs the ST10 disassembly.
 
-## To get a real CAN DBC
-Disassemble `GATEWAY.FLI` (ST10/C166) with `hn/c166-dis` and trace the CAN RX handlers — the
-only path to raw CAN IDs + signal bit positions. Not done (large effort); noted as next step.
+## Raw BAP CAN IDs — known from community work
+The on-wire CAN IDs for the RNS-510's BAP/MOST channel are already reverse-engineered
+in the community and corroborate the firmware-side findings above. From majonezz's
+`rns510-tv-input` (a Linux SocketCAN daemon that emulates a MOST/BAP TV-tuner to the
+unit) and AugustoS97's `CanBus-Radio-VAG`:
+
+| CAN ID | Direction | Meaning |
+|---|---|---|
+| `0x6D3` | → unit | BAP messages to the radio (TX; segmented into 8-byte frames) |
+| `0x6C7` | ← unit | BAP requests from the radio (RX) |
+| `0x602` | → unit | heartbeat (8 zero bytes, ~1 Hz) |
+| `0x575` | → unit | **ignition / wake** (infotainment+comfort bus; confirmed by two sources) |
+| `0x661` | → unit | radio on/off |
+
+Buses: **infotainment 100 kbps, comfort/convenience 100 kbps, drivetrain 500 kbps**.
+`0x575` on the infotainment/comfort bus is the key to **waking the radio on a bench**.
+The BAP FBlock function IDs seen on that channel (FBLOCK_AVAILABILITY 0x02,
+TUNE_TO_HYBRID 0x11, SOURCE 0x15, TUNER_STATUS 0x1F, TTCONTROL 0x21, COLOR 0x24, …)
+match the gateway's `BAP FktId` / `MOST FktId` map. So the firmware-internal FBlock IDs
+(above) and these on-wire CAN IDs are two views of the same channel.
+
+To extend to the full comfort-signal CAN map (speed/clamp/illumination bit positions),
+either sniff the car or disassemble `GATEWAY.FLI` (ST10/C166) with `hn/c166-dis` and
+trace the CAN RX handlers. (See SOURCES for the community references.)
